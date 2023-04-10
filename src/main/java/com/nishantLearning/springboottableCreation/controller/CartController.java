@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/cart")
@@ -37,6 +39,11 @@ public class CartController {
     @Cacheable(value = "getCartById", key="#p0")
     @GetMapping("/{Id}")
     public Cart getCartById(@PathVariable Long Id){
+        try{
+            Thread.sleep(10000);
+        }catch(InterruptedException e){
+            System.out.println(e);
+        }
         return cartRepository.findById(Id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found with Id" + Id));
     }
